@@ -1,3 +1,15 @@
+# /
+/.settings
+/.classpath
+/.project
+/target/
+/logs/
+/.swp
+**/*.properties
+**/*.lock
+/coverage-report/
+**/dependency-reduced-pom.xml
+**/*.log
 *.class
 
 # Mobile Tools for Java (J2ME)
