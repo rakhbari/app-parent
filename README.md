@@ -25,19 +25,9 @@ This is the property key this project's shaded JAR plugin will use to set the `M
 
 __NOTE__: Failure to do this will leave your app's fat JAR un-executable!
  
-### Build Info File
-This is a file with default name `scm-info.txt` that's generated automatically every time you build your project. Its name can be overridden with the following snippet inside a `<properties>` section of your own `pom.xml` file:
+### Git Build Info File
+This parent POM uses the [`maven-git-commit-id-plugin`](https://github.com/ktoso/maven-git-commit-id-plugin "git-commit-id-plugin"). Please refer to that plugin's github page for full instructions.
 
-	<scm.info.file>my-build-info.txt</scm.info.file>
+But in short, you include a `git.properties` as a template in your project's `/src/main/resources` directory and this plugin generates a file of the exact same name with all the available git & build time info under your project's `/target/classes`.
 
-With this file you can write a minimal processor class in your app to read this file and then provide a REST endpoint, such as `/admin/build-info`, to return the info stored in this file, which might look like this:
-
-	{
-	  "branch": "master",
-	  "version": "1.3.0",
-	  "commit": "2f3c0163a2dd4a1743f120adca975449e2daa481",
-	  "lastChangedAuthor": "Your Name <email@mycompany.com>",
-	  "buildDate": 1460758203427,
-	  "buildDateString": "2016-04-15 15:10:03.427 -0700",
-	  "buildDateShortString": "20160415-151003PDT"
-	}
+You can then read that `git.properties` file at runtime and provide a `/admin/build-info` (or something similar) to your users.

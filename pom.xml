@@ -9,7 +9,7 @@
 
 	<properties>
 		<maven.antrun.plugin.version>1.7</maven.antrun.plugin.version>
-		<scm.info.file>scm-info.txt</scm.info.file>
+		<git-commit-id-plugin.version>2.2.1</git-commit-id-plugin.version>
 
 		<!-- use UTF-8 for everything -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -30,58 +30,32 @@
 				</configuration>
 			</plugin>
 
-			<!-- run ant task to generate scm-info.txt -->
 			<plugin>
-				<artifactId>maven-antrun-plugin</artifactId>
-				<version>${maven.antrun.plugin.version}</version>
+				<groupId>pl.project13.maven</groupId>
+				<artifactId>git-commit-id-plugin</artifactId>
+				<version>${git-commit-id-plugin.version}</version>
 				<executions>
 					<execution>
-						<phase>compile</phase>
-						<configuration>
-							<tasks>
-								<macrodef name="trim">
-									<attribute name="property" />
-									<sequential>
-										<propertyregex property="@{property}" input="${@{property}}"
-											regexp="[\s]*(.+)[\s]*" replace="\1" defaultvalue="${@{property}}"
-											override="true" />
-									</sequential>
-								</macrodef>
-								<tstamp>
-									<format property="BUILD_TSTAMP" pattern="yyyy-MM-dd HH:mm:ss.S Z" />
-								</tstamp>
-								<property name="base.dir" value="." />
-								<property name="scm.info.path"
-									value="${base.dir}/target/classes/${scm.info.file}" />
-								<exec executable="git" dir="${base.dir}" outputproperty="branch"
-									failifexecutionfails="false" resultproperty="exec.result">
-									<arg line="branch" />
-									<redirector>
-										<outputfilterchain>
-											<containsregex pattern="^\*\s(.+)" replace="\1" />
-										</outputfilterchain>
-									</redirector>
-								</exec>
-								<echo message="branch: ${branch}" />
-								<echo message="version: ${project.version}" />
-								<concat destfile="${scm.info.path}">branch: ${branch}${line.separator}</concat>
-								<concat destfile="${scm.info.path}" append="true">version:
-									${project.version}${line.separator}</concat>
-								<exec executable="git" dir="${base.dir}" output="${scm.info.path}"
-									failifexecutionfails="false" resultproperty="exec.result"
-									append="true">
-									<arg line="log -n 1" />
-								</exec>
-								<concat destfile="${scm.info.path}" append="true">Build Date:
-									${BUILD_TSTAMP}${line.separator}</concat>
-								<echo message="SCM info file created: ${scm.info.path}" />
-							</tasks>
-						</configuration>
 						<goals>
-							<goal>run</goal>
+							<goal>revision</goal>
 						</goals>
 					</execution>
 				</executions>
+
+				<configuration>
+					<dotGitDirectory>${project.basedir}/.git</dotGitDirectory>
+					<dateFormat>yyyy-dd-MM HH:mm:ss z</dateFormat>
+					<dateFormatTimeZone>${user.timezone}</dateFormatTimeZone>
+					<!-- verbose>false</verbose -->
+					<!-- this is false by default, forces the plugin to generate the git.properties 
+						file -->
+					<generateGitPropertiesFile>true</generateGitPropertiesFile>
+					<generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+					<!-- format: properties | json -->
+					<format>properties</format>
+					<failOnNoGitDirectory>false</failOnNoGitDirectory>
+					<commitIdGenerationMode>full</commitIdGenerationMode>
+				</configuration>
 			</plugin>
 
 			<!-- Build the whole app as a "fat" JAR - single JAR file which contains 
