@@ -12,7 +12,7 @@
 		<git-commit-id-plugin.version>2.2.1</git-commit-id-plugin.version>
 		<build-file-date-format>yyyy-dd-MM HH:mm:ss z</build-file-date-format>
 
-		<!-- use UTF-8 for everything -->
+		<!-- Use UTF-8 for everything -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
